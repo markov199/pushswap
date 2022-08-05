@@ -6,16 +6,13 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:15:36 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/05 15:16:13 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/07/11 11:44:52 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include<stdlib.h>
 #include<stdio.h>
 #include"libft/libft.h"
-
-
-
 
 int	ft_no_repeats(int *str)
 {

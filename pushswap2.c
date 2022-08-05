@@ -6,15 +6,73 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 11:47:35 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/07/22 16:22:29 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/05 15:46:24 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include"libft/libft.h"
 
-// void ft_radix_sort(t_list **list);
+typedef struct stack_size
+{
+	int	a;
+	int	b;
+}stk_size;
+
+void ft_radix_sort(t_list **list, t_list **temp_list, int size);
 int	ft_count_args(char *str);
+int	ft_sort(t_list **list);
+void	rra(t_list **list);
+int ft_rotate (t_list **list);
+int ft_position(t_list *list, int x);
+int ft_push(t_list **to_list, t_list **from_list);
+void	ft_lstprint(t_list *list);
+
+void ft_optimalrotate(t_list **list, int data, char ch)
+{
+	t_list *ptr;
+	int	rotate_count;
+	int	size;
+
+	ptr = *list;
+	size = ft_lstsize(*list);
+	rotate_count = ft_position(ptr, data);
+	if (rotate_count > size / 2)
+	{
+		rotate_count = size - rotate_count;
+		while (rotate_count--)
+		{
+			ft_printf("rr%c\n", ch);
+			rra(list);
+		}
+	}
+	else
+		while (rotate_count--)
+		{
+			ft_printf("r%c\n", ch);
+			ft_rotate(list);
+		}
+}
+
+int ft_position(t_list *list, int x)
+{
+	int	count;
+	int	size;
+	t_list	*ptr;
+
+	ptr = list;
+	size = ft_lstsize(ptr);
+	count = 0;
+	while (count != size)
+	{
+		if(*(int *)ptr->content == x)
+			return (count);
+		count++;		
+		ptr = ptr->next;
+
+	}
+	return (-1);
+}
 
 static int	ft_isspace(char ch)
 {
@@ -96,16 +154,16 @@ int ft_double_swap(t_list **l1, t_list **l2)
 	return (0);
 }
 
-int ft_push(t_list **l1, t_list **l2)
+int ft_push(t_list **to_list, t_list **from_list)
 {
 	t_list	*temp1;
 	
-	if(*l2)
+	if(*from_list)
 	{
-		temp1 = *l2;
-		*l2 = temp1 ->next;
-		temp1 ->next = *l1;
-		*l1 = temp1;
+		temp1 = *from_list;
+		*from_list = temp1 ->next;
+		temp1 ->next = *to_list;
+		*to_list = temp1;
 	}
 	return (0);
 }
@@ -127,7 +185,7 @@ int ft_rotate (t_list **list)
 	return (0);
 }
 
-int	rra(t_list **list)
+void	rra(t_list **list)
 {
 	t_list	*ptr;
 	t_list	*temp;
@@ -141,9 +199,9 @@ int	rra(t_list **list)
 		ptr ->next ->next = temp;
 		*list = ptr ->next;
 		ptr ->next = NULL;
-		return (0);
+		return ;
 	}
-return (0);
+return ;
 }
 
 int ft_min(t_list **list)
@@ -155,7 +213,7 @@ int ft_min(t_list **list)
 
 	if (*list)
 	{
-		i = 1;
+		i = 0;
 		j = i + 1;
 		ptr1 = *list;
 		ptr2 = ptr1 ->next;
@@ -186,7 +244,7 @@ int	ft_max(t_list **list)
 	{
 		ptr1 = *list;
 		ptr2 = ptr1 ->next;
-		i = 1;
+		i = 0;
 		j = i + 1;		
 		while (ptr2)
 		{			
@@ -212,55 +270,74 @@ void ft_sort_3(t_list **list)
 	ptr = *list;
 	min = ft_min(list);
 	max = ft_max(list);
-	if (min == 2 && max == 3)
-		ft_swap(list);
-	else if (min == 3 && max ==1)
+	if (min == 0 && max == 1)
 	{
-		ft_swap (list);
-		rra (list);
+		ft_swap(list);
+		ft_rotate(list);
 	}
-	else if (min == 2 && max == 1)
+	else if (min == 1 && max == 0)
 		ft_rotate(list);
 	else if (min == 1 && max == 2)
+		ft_swap(list);
+	else if (min == 2 && max == 0)
 	{
 		ft_swap (list);
-		ft_rotate (list);
+		rra(list);
 	}
-	else if (min == 3 && max == 2)
-		rra (list);
+	else if(min == 2 && max == 1)
+		rra(list);
 	return ;
 }
-void	ft_sort_100(t_list **list)
+
+void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 {
 	int	count;
-	int	size;
+	int chunk;
 	t_list	*stack;
-	t_list	*stack_temp;
+	stk_size	stacksize;
 
 	stack = *list;
-	stack_temp = NULL;
-	count = ft_max(&stack);
-	size = ft_lstsize(stack);
-	
-	if (count > (size + 1) / 2)
+	chunk = 1;
+	stacksize.b = 0;
+	stacksize.a  = size;
+	while (stacksize.a)
 	{
-		count = size - count + 1;
-		while (count--)
-			rra(&stack);
+		count = stacksize.a;
+		while(count--)
+		{
+			if (*(int *)stack ->content < chunk * 24)
+			{
+				ft_optimalrotate(list, *(int *)stack ->content, 'a');
+				ft_push(&stack_temp, &stack);
+				ft_printf("pb\n");
+				if(stack_temp ->next)
+				{
+					if (*(int *)stack_temp ->content < ((2 * chunk -1) * 24 / 2))
+					{
+						ft_rotate(&stack_temp);
+						ft_printf("rb\n");
+					}
+				}
+				stacksize.a--;
+				stacksize.b++;
+			}
+		
+		}
+		ft_lstprint(stack_temp);
+		chunk++;
 	}
-	else 
-		while (count--)
-			ft_rotate(&stack);
-	ft_lstprint(stack);
-	
+	ft_lstprint(stack_temp);
 }
 
 int	ft_sort(t_list **list)
 {
 	int	i;
 	t_list	*ptr;
+	t_list	*stack_temp;
+	
 
 	ptr = *list;
+	stack_temp = NULL;
 	i = ft_lstsize(ptr);
 	if (i == 2)
 	{
@@ -269,8 +346,10 @@ int	ft_sort(t_list **list)
 	}
 	if (i == 3)
 		ft_sort_3(list);
-	else
-		ft_sort_100(list);
+	else if (i > 3)
+		// ft_radix_sort(list);
+		ft_sort_100(list, stack_temp, i);
+	// ft_optimalrotate(list, 8, 'a');
 	return (0);		
 }
 
@@ -385,8 +464,7 @@ t_list	*ft_init_stack(t_list *stack, char *str)
 		{
 			ft_lstadd_back(&list, ft_lstnew(&args[i]));
 			i++;
-		}
-		
+		}		
 	}
 	return (list);
 }
@@ -431,43 +509,81 @@ t_list	*ft_index_list(t_list *list)
 	return (stack);
 }
 
-// void ft_radix_sort(t_list **list)
+// void ft_radix_sort(t_list **list, t_list **temp_stack, int size)
 // {
-// 	t_list *stack_b;
 // 	t_list	*ptr;
-// 	int i;
 // 	int	j;
 // 	int	count;
+// 	int	rotate_count;
+// 	stk_size	stack;
 
-// 	stack_b = NULL;
 	
-// 	i = 0;
+// 	stack.b = ft_lstsize(*temp_list);
 // 	j = 0;
-// 	count = ft_max(list);
-	
-// 	while (count >> j)
+// 	while (j < 9)
 // 	{
-// 		i = 0;
 // 		ptr = *list;
-// 		while (ptr)
+// 		stack.a = ft_lstsize(*list);
+// 		count = stack.a;
+// 		while (count != 0)
 // 		{
-// 			if((*(int *)ptr->content >> j) && 1)
+// 			if((*(int *)ptr->content >> j) & 1)
 // 			{
-// 				pb(list, &stack_b);
-// 				rb(&stack_b);
-				
+// 				ft_printf("ra\n");
+// 				ft-rotate(list);
 // 			}
-// 			else ra(list);
-// 			ptr = ptr ->next;
-// 			i++;
+// 			else				
+// 			{
+// 				ft_push(&stack_b, list);
+// 				ft_printf("pb\n");
+// 				size.a--;
+// 				size.b++;
+// 			}
+// 			count--;
 // 		}
-// 		while(stack_b)
-// 		{
-// 			pa(list, &stack_b);
-// 			ra(list);
-// 		}
-// 		ft_lstprint(*list);
 // 		j++;
+// 		count = size.b;
+// 		while(count != 0)
+// 		{
+			
+// 			if(!((* (int *)ptr ->content >> j) & 1))
+// 			{
+// 				ft_printf("rb\n");
+// 				ft_rotat
+// 			}
+// 			else
+// 			{
+// 				if (rotate_count > size.b / 2)
+// 				{
+// 					rotate_count = size.b - rotate_count;
+// 					while (rotate_count--)
+// 					{
+// 						rra(&stack_b);
+// 						// ft_printf("rrb\n");
+// 					}
+// 				}
+// 				else
+// 				{
+// 					while(rotate_count--)
+// 					{
+// 						ft_rotate(list);
+// 						// ft_printf("rb\n");
+// 					}
+// 				}
+// 				ft_push(list, &stack_b);
+// 				// ft_printf("pa\n");
+// 				size.b--;
+// 				count--;
+// 				rotate_count = 0;
+// 				ptr = stack_b;
+// 			}			
+// 		}
+// 	}
+// 	while (size.b)
+// 	{
+// 		ft_push(list, &stack_b);
+// 		// ft_printf("pa\n");
+// 		size.b--;
 // 	}
 // }
 
@@ -493,11 +609,9 @@ int	main(int ac, char *av[])
 		ft_check_repeats(stack_a);
 		if (ft_is_sorted(stack_a))
 			exit (0);
-		ft_printf("\nstack_a\n");
-		ft_lstprint(stack_a);
 		stack_a = ft_index_list(stack_a);
-		ft_lstprint(stack_a);
-		ft_sort(&stack_a);		
+		ft_sort(&stack_a);
+		// ft_lstprint(stack_a);
 		return (0);
 	}
 	return (0);

@@ -38,7 +38,6 @@ int ft_print_list(t_list * list)
 int main (int ac, char *av[])
 {
 	t_list *num;
-
 	t_list *ptr;
 	int	i;
 	int	nbr;
