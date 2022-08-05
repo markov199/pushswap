@@ -6,7 +6,7 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 11:47:35 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/05 15:46:24 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/05 19:17:06 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int ft_position(t_list *list, int x)
 		ptr = ptr->next;
 
 	}
-	return (-1);
+	return (0);
 }
 
 static int	ft_isspace(char ch)
@@ -293,6 +293,7 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 {
 	int	count;
 	int chunk;
+	int i;
 	t_list	*stack;
 	stk_size	stacksize;
 
@@ -300,7 +301,8 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 	chunk = 1;
 	stacksize.b = 0;
 	stacksize.a  = size;
-	while (stacksize.a)
+	i =  (stacksize / 24);
+	while (i)
 	{
 		count = stacksize.a;
 		while(count--)
@@ -308,7 +310,7 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 			if (*(int *)stack ->content < chunk * 24)
 			{
 				ft_optimalrotate(list, *(int *)stack ->content, 'a');
-				ft_push(&stack_temp, &stack);
+				ft_push(&stack_temp, list);
 				ft_printf("pb\n");
 				if(stack_temp ->next)
 				{
@@ -320,11 +322,12 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 				}
 				stacksize.a--;
 				stacksize.b++;
+				stack = *list;
 			}
-		
+			else
+				stack = stack ->next;
 		}
-		ft_lstprint(stack_temp);
-		chunk++;
+		chunk++;		
 	}
 	ft_lstprint(stack_temp);
 }
@@ -611,7 +614,7 @@ int	main(int ac, char *av[])
 			exit (0);
 		stack_a = ft_index_list(stack_a);
 		ft_sort(&stack_a);
-		// ft_lstprint(stack_a);
+		ft_lstprint(stack_a);
 		return (0);
 	}
 	return (0);
