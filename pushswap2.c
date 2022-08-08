@@ -6,11 +6,10 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 11:47:35 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/05 19:17:06 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/08 13:06:17 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include"libft/libft.h"
 
 typedef struct stack_size
@@ -19,13 +18,13 @@ typedef struct stack_size
 	int	b;
 }stk_size;
 
-void ft_radix_sort(t_list **list, t_list **temp_list, int size);
+void ft_radix_sort(t_list **list);
 int	ft_count_args(char *str);
 int	ft_sort(t_list **list);
-void	rra(t_list **list);
-int ft_rotate (t_list **list);
+void	rra(t_list **list, char ch);
+int ft_rotate (t_list **list, char ch);
 int ft_position(t_list *list, int x);
-int ft_push(t_list **to_list, t_list **from_list);
+int ft_push(t_list **to_list, t_list **from_list, char ch);
 void	ft_lstprint(t_list *list);
 
 void ft_optimalrotate(t_list **list, int data, char ch)
@@ -41,17 +40,11 @@ void ft_optimalrotate(t_list **list, int data, char ch)
 	{
 		rotate_count = size - rotate_count;
 		while (rotate_count--)
-		{
-			ft_printf("rr%c\n", ch);
-			rra(list);
-		}
+			rra(list, ch);
 	}
 	else
 		while (rotate_count--)
-		{
-			ft_printf("r%c\n", ch);
-			ft_rotate(list);
-		}
+			ft_rotate(list, ch);
 }
 
 int ft_position(t_list *list, int x)
@@ -130,7 +123,7 @@ void	ft_lstprint(t_list *list)
 	return ;
 }
 
-int ft_swap(t_list **list)
+int ft_swap(t_list **list, char ch)
 {
 	t_list *ptr;
 	t_list *temp;
@@ -143,18 +136,19 @@ int ft_swap(t_list **list)
 		temp ->next = ptr;
 		*list = temp;
 	}
+	ft_printf("s%c\n",ch);
 	return (0);
 }
 
 
 int ft_double_swap(t_list **l1, t_list **l2)
 {
-	ft_swap(l1);
-	ft_swap(l2);
+	ft_swap(l1, 'a');
+	ft_swap(l2, 'b');
 	return (0);
 }
 
-int ft_push(t_list **to_list, t_list **from_list)
+int ft_push(t_list **to_list, t_list **from_list, char ch)
 {
 	t_list	*temp1;
 	
@@ -165,11 +159,12 @@ int ft_push(t_list **to_list, t_list **from_list)
 		temp1 ->next = *to_list;
 		*to_list = temp1;
 	}
+	ft_printf("p%c\n", ch);
 	return (0);
 }
 
 
-int ft_rotate (t_list **list)
+int ft_rotate (t_list **list, char ch)
 {
 	t_list	*ptr;
 	t_list	*temp;
@@ -182,10 +177,11 @@ int ft_rotate (t_list **list)
 		*list = temp ->next;
 		temp ->next = NULL;
 	}
+	ft_printf("r%c\n",ch);
 	return (0);
 }
 
-void	rra(t_list **list)
+void	rra(t_list **list, char ch)
 {
 	t_list	*ptr;
 	t_list	*temp;
@@ -199,7 +195,7 @@ void	rra(t_list **list)
 		ptr ->next ->next = temp;
 		*list = ptr ->next;
 		ptr ->next = NULL;
-		return ;
+		ft_printf("rr%c\n", ch);
 	}
 return ;
 }
@@ -257,7 +253,7 @@ int	ft_max(t_list **list)
 			ptr2 = ptr2 ->next;
 		}
 	}
-	return (i);
+	return (*(int *)ptr1 ->content);
 }
 
 
@@ -268,26 +264,40 @@ void ft_sort_3(t_list **list)
 	int		min;
 
 	ptr = *list;
-	min = ft_min(list);
-	max = ft_max(list);
+	min = ft_position(*list, 0);
+	max = ft_position(*list, 2);
 	if (min == 0 && max == 1)
 	{
-		ft_swap(list);
-		ft_rotate(list);
+		ft_swap(list, 'a');
+		ft_rotate(list, 'a');
 	}
 	else if (min == 1 && max == 0)
-		ft_rotate(list);
+		ft_rotate(list, 'a');
 	else if (min == 1 && max == 2)
-		ft_swap(list);
+		ft_swap(list, 'a');
 	else if (min == 2 && max == 0)
 	{
-		ft_swap (list);
-		rra(list);
+		ft_swap (list, 'a');
+		rra(list, 'a');
 	}
 	else if(min == 2 && max == 1)
-		rra(list);
+		rra(list, 'a');
 	return ;
 }
+
+void ft_optimalpush(t_list **to, t_list **from, int i, char ch)
+{
+	char ch2;
+	t_list *ptr;
+
+	if(ch == 'a')
+		ch2 = 'b';
+	else if (ch == 'b')
+		ch2 = 'a';
+	ft_optimalrotate(from, i, ch2);
+	ft_push(to, from, ch);
+}
+
 
 void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 {
@@ -301,25 +311,20 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 	chunk = 1;
 	stacksize.b = 0;
 	stacksize.a  = size;
-	i =  (stacksize / 24);
-	while (i)
+	i =  (stacksize.a / 24);
+	while (i--)
 	{
 		count = stacksize.a;
 		while(count--)
 		{
 			if (*(int *)stack ->content < chunk * 24)
 			{
-				ft_optimalrotate(list, *(int *)stack ->content, 'a');
-				ft_push(&stack_temp, list);
-				ft_printf("pb\n");
+				ft_optimalpush(&stack_temp, list, *(int *)stack ->content, 'b');
 				if(stack_temp ->next)
-				{
 					if (*(int *)stack_temp ->content < ((2 * chunk -1) * 24 / 2))
 					{
-						ft_rotate(&stack_temp);
-						ft_printf("rb\n");
+						ft_rotate(&stack_temp, 'b');
 					}
-				}
 				stacksize.a--;
 				stacksize.b++;
 				stack = *list;
@@ -327,9 +332,18 @@ void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 			else
 				stack = stack ->next;
 		}
-		chunk++;		
+		chunk++;
 	}
-	ft_lstprint(stack_temp);
+	while (stacksize.a--)
+	{
+		ft_push(&stack_temp, list, 'b');
+		stacksize.b++;
+	}
+	while(stacksize.b--)
+	{
+		ft_optimalpush(list, &stack_temp, ft_max(&stack_temp), 'a');
+	}
+	ft_lstprint(*list);
 }
 
 int	ft_sort(t_list **list)
@@ -345,12 +359,13 @@ int	ft_sort(t_list **list)
 	if (i == 2)
 	{
 		if (*(int *)ptr ->content > *(int *)ptr ->next->content)
-			ft_swap(list);
+			ft_swap(list, 'a');
 	}
 	if (i == 3)
 		ft_sort_3(list);
-	else if (i > 3)
-		// ft_radix_sort(list);
+	//  else if (i > 200)
+	// 	ft_radix_sort(list);
+	else
 		ft_sort_100(list, stack_temp, i);
 	// ft_optimalrotate(list, 8, 'a');
 	return (0);		
@@ -512,82 +527,75 @@ t_list	*ft_index_list(t_list *list)
 	return (stack);
 }
 
-// void ft_radix_sort(t_list **list, t_list **temp_stack, int size)
+// void ft_radix_sort(t_list **list)
 // {
 // 	t_list	*ptr;
+// 	t_list	*stack_b;
 // 	int	j;
+// 	int size;
+// 	int rotate_count;
 // 	int	count;
-// 	int	rotate_count;
 // 	stk_size	stack;
 
-	
-// 	stack.b = ft_lstsize(*temp_list);
 // 	j = 0;
-// 	while (j < 9)
-// 	{
-// 		ptr = *list;
+// 	size = ft_lstsize(*list);
+// 	stack_b = NULL;
+// 	stack.b = 0;
+// 	rotate_count = 0;
+	
+// 	while (size >> j)
+// 	{	
+// 		ptr = *list;	
 // 		stack.a = ft_lstsize(*list);
 // 		count = stack.a;
 // 		while (count != 0)
 // 		{
 // 			if((*(int *)ptr->content >> j) & 1)
 // 			{
-// 				ft_printf("ra\n");
-// 				ft-rotate(list);
+// 				ptr = ptr ->next;
+// 				rotate_count++;
 // 			}
 // 			else				
 // 			{
-// 				ft_push(&stack_b, list);
-// 				ft_printf("pb\n");
-// 				size.a--;
-// 				size.b++;
+// 				ft_optimalpush(&stack_b, list, *(int *)ptr ->content, 'b');
+// 				stack.a--;
+// 				stack.b++;
+// 				ptr = *list;
+// 				rotate_count = 0;
 // 			}
 // 			count--;
 // 		}
+// 		while(rotate_count--)
+// 		{
+// 			ft_rotate(list);
+// 			ft_printf("ra\n");
+// 		}
+// 		// ft_lstprint(*temp_stack);	
 // 		j++;
-// 		count = size.b;
+// 		count = stack.b;
 // 		while(count != 0)
 // 		{
-			
-// 			if(!((* (int *)ptr ->content >> j) & 1))
+// 			if(((* (int *)stack_b->content >> j) & 1))
 // 			{
-// 				ft_printf("rb\n");
-// 				ft_rotat
+// 				ft_push(list, &stack_b);
+// 				ft_printf("pn\n");
+// 				stack.b--;
+// 				stack.a++;
 // 			}
 // 			else
 // 			{
-// 				if (rotate_count > size.b / 2)
-// 				{
-// 					rotate_count = size.b - rotate_count;
-// 					while (rotate_count--)
-// 					{
-// 						rra(&stack_b);
-// 						// ft_printf("rrb\n");
-// 					}
-// 				}
-// 				else
-// 				{
-// 					while(rotate_count--)
-// 					{
-// 						ft_rotate(list);
-// 						// ft_printf("rb\n");
-// 					}
-// 				}
-// 				ft_push(list, &stack_b);
-// 				// ft_printf("pa\n");
-// 				size.b--;
-// 				count--;
-// 				rotate_count = 0;
-// 				ptr = stack_b;
-// 			}			
+// 				ft_rotate(&stack_b);
+// 				ft_printf("rb\n");
+// 			}
+// 			count--;
 // 		}
 // 	}
-// 	while (size.b)
-// 	{
-// 		ft_push(list, &stack_b);
-// 		// ft_printf("pa\n");
-// 		size.b--;
-// 	}
+// 		while (stack.b)
+// 		{
+// 			ft_push(list, &stack_b);
+// 			ft_printf("pa\n");
+// 			stack.b--;
+// 		}
 // }
 
 int	main(int ac, char *av[])
