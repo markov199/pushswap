@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast.c                                       :+:      :+:    :+:   */
+/*   ft_sort_5.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/08 16:47:29 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/09 11:48:49 by mkovoor          ###   ########.fr       */
+/*   Created: 2022/08/09 07:30:36 by mkovoor           #+#    #+#             */
+/*   Updated: 2022/08/09 08:22:03 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include"libft/libft.h"
+#include"pushswap.h"
 
-t_list	*ft_lstlast(t_list *lst)
-{	
-	t_list	*ptr;
+void ft_sort_5(t_list **list)
+{
+	int i;
+	t_list *stack_temp;
 
-	ptr = lst;
-	while (ptr)
-	{
-		if (!ptr ->next)
-			return (ptr);
-		ptr = ptr->next;
-	}
-	return (ptr);
+	stack_temp = NULL;
+	ft_optimalpush(&stack_temp, *list, 0, 'b');
+	ft_optimalpush(&stack_temp, *list, 1, 'b');
+	ft_sort_3(list);
+	ft_push(list, &stack_temp, 'a');
+	ft_push(list, &stack_temp, 'a');
 }

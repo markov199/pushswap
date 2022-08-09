@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast.c                                       :+:      :+:    :+:   */
+/*   ft_lstprint.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/08 16:47:29 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/09 11:48:49 by mkovoor          ###   ########.fr       */
+/*   Created: 2022/08/09 11:44:31 by mkovoor           #+#    #+#             */
+/*   Updated: 2022/08/09 11:45:21 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include"libft/libft.h"
+#include"pushswap.h"
 
-t_list	*ft_lstlast(t_list *lst)
-{	
+void	ft_lstprint(t_list *list)
+{
 	t_list	*ptr;
+	int		i;
 
-	ptr = lst;
-	while (ptr)
-	{
-		if (!ptr ->next)
-			return (ptr);
-		ptr = ptr->next;
+	i = ft_lstsize(list);
+	ptr = list;
+	while (i)
+	{		
+		ft_printf("%d ", *(int *)ptr ->content);
+		ptr = ptr ->next;
+		i--;
 	}
-	return (ptr);
+	ft_printf("\n");
+	return ;
 }
