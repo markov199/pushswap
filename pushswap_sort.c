@@ -6,7 +6,7 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 11:36:08 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/09 15:35:11 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/10 16:04:33 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,32 +93,24 @@ void	ft_sort_500(t_list **list, t_list *stack_temp, int size)
 		}
 		chunk++;
 	}
-	while (stacksize.a--)
-	{
+	while (*list)
 		ft_push(&stack_temp, list, 'b');
-		stacksize.b++;
-	}
-	while (stacksize.b--)
+	while (stack_temp)
 		ft_optimalpush(list, &stack_temp, ft_max(&stack_temp), 'a');
 }
 
 void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 {
+	// int			count;
 	int			chunk;
-	int			i;
 	t_list		*stack;
-	stk_size	stacksize;
-
+	int			i;
+	
 	stack = *list;
-	chunk = 1;
-	stacksize.b = 0;
-	stacksize.a = size;
-	i = (stacksize.a / 24);
-	while (i --)
-	{
-		ft_chunk(list, &stack_temp, chunk);
-		chunk++;
-	}
+	chunk = size / 24;
+	i = 1;
+	while (chunk--)
+		stack_temp = ft_chunk(list, stack_temp, size, 24 * i++);		
 	while (*list)
 		ft_push(&stack_temp, list, 'b');
 	while (stack_temp)

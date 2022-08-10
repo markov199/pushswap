@@ -6,7 +6,7 @@
 #    By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 14:01:55 by mkovoor           #+#    #+#              #
-#    Updated: 2022/06/16 17:23:15 by mkovoor          ###   ########.fr        #
+#    Updated: 2022/08/10 09:45:43 by mkovoor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,37 +30,28 @@ SRCS	= ft_isascii.c ft_isprint.c ft_isalpha.c ft_isdigit.c \
 			ft_strjoin.c ft_substr.c ft_strtrim.c ft_strmapi.c \
 			ft_striteri.c ft_itoa.c ft_split.c ft_printf_char.c \
 			ft_printf_d.c ft_printf_p.c ft_printf_s.c \
-			ft_printf_u.c ft_printf_x.c ft_printf.c
+			ft_printf_u.c ft_printf_x.c ft_printf.c \
+			ft_lstnew.c ft_lstadd_front.c ft_lstsize.c \
+		  	ft_lstlast.c ft_lstadd_back.c ft_lstclear.c \
+		  	ft_lstdelone.c ft_lstiter.c ft_lstmap.c 
 
 OBJS	= $(SRCS:.c=.o)
 
-BONUS_S	= ft_lstnew.c ft_lstadd_front.c ft_lstsize.c \
-		  ft_lstlast.c ft_lstadd_back.c ft_lstclear.c \
-		  ft_lstdelone.c ft_lstiter.c ft_lstmap.c 
-
-BONUS_O	= $(BONUS_S:.c=.o)
-
 all:		$(NAME) 
 
-$(NAME):	$(OBJS) $(INCLUDE)
+$(NAME):	$(OBJS) $(INCLUDE) 
 			$(LIB1) $(NAME) $(OBJS)
 			# $(LIB2) $(NAME) 
-
-bonus:		$(NAME) $(BONUS_O)
-			$(LIB1) $(NAME) $(BONUS_O)
-			# $(LIB2) $(NAME)
 
 .c.o:
 			$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $(<:.c=.o)
 
 clean:
-			$(RM) $(OBJS) $(BONUS_O)
+			$(RM) $(OBJS) 
 
 fclean:		clean
 			$(RM) $(NAME)
 
 re:			fclean all
 
-rebonus:	fclean bonus
-
-.PHONY:		all clean fclean re bonus rebonus
+.PHONY:		all clean fclean re 
