@@ -6,7 +6,7 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 11:47:35 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/10 15:33:09 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/15 13:54:06 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,100 +117,27 @@ t_list	*ft_index_list(t_list *list)
 	return (stack);
 }
 
-// void ft_radix_sort(t_list **list)
-// {
-// 	t_list	*ptr;
-// 	t_list	*stack_b;
-// 	int	j;
-// 	int size;
-// 	int rotate_count;
-// 	int	count;
-// 	stk_size	stack;
-
-// 	j = 0;
-// 	size = ft_lstsize(*list);
-// 	stack_b = NULL;
-// 	stack.b = 0;
-// 	rotate_count = 0;	
-// 	while (size >> j)
-// 	{	
-// 		ptr = *list;	
-// 		stack.a = ft_lstsize(*list);
-// 		count = stack.a;
-// 		while (count != 0)
-// 		{
-// 			if((*(int *)ptr->content >> j) & 1)
-// 			{
-// 				ptr = ptr ->next;
-// 				rotate_count++;
-// 			}
-// 			else				
-// 			{
-// 				ft_optimalpush(&stack_b, list, *(int *)ptr ->content, 'b');
-// 				stack.a--;
-// 				stack.b++;
-// 				ptr = *list;
-// 				rotate_count = 0;
-// 			}
-// 			count--;
-// 		}
-// 		while(rotate_count--)
-// 		{
-// 			ft_rotate(list);
-// 			ft_printf("ra\n");
-// 		}
-// 		// ft_lstprint(*temp_stack);	
-// 		j++;
-// 		count = stack.b;
-// 		while(count != 0)
-// 		{
-// 			if(((* (int *)stack_b->content >> j) & 1))
-// 			{
-// 				ft_push(list, &stack_b);
-// 				ft_printf("pn\n");
-// 				stack.b--;
-// 				stack.a++;
-// 			}
-// 			else
-// 			{
-// 				ft_rotate(&stack_b);
-// 				ft_printf("rb\n");
-// 			}
-// 			count--;
-// 		}
-// 	}
-// 		while (stack.b)
-// 		{
-// 			ft_push(list, &stack_b);
-// 			ft_printf("pa\n");
-// 			stack.b--;
-// 		}
-// }
-
 int	main(int ac, char *av[])
 {
 	int		j;
 	t_list	*stack_a;
-	t_list	*stack_b;
+	char	*str;
 
 	if (ac > 1)
 	{
 		j = 0;
 		stack_a = NULL;
-		stack_b = NULL;
+		str = " ";
 		while (++j < ac)
-			stack_a = ft_init_stack(stack_a, av[j]);
-		if (!stack_a)
 		{
-			ft_printf("Error\n");
-			exit(1);
+			str = ft_strjoin_ps(str, av[j]);
+			str = ft_strjoin_ps(str, " ");
 		}
-		ft_check_repeats(stack_a);
-		if (ft_is_sorted(stack_a))
-			exit (0);
+		ft_check_int_limits(str);
+		stack_a = ft_init_stack(stack_a, str);
+		ft_check_errors(stack_a);
 		stack_a = ft_index_list(stack_a);
 		ft_sort(&stack_a);
-		ft_lstprint(stack_a);
 		return (0);
 	}
 	return (0);

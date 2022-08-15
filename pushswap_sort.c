@@ -6,7 +6,7 @@
 /*   By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 11:36:08 by mkovoor           #+#    #+#             */
-/*   Updated: 2022/08/10 16:04:33 by mkovoor          ###   ########.fr       */
+/*   Updated: 2022/08/15 12:57:51 by mkovoor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,39 +60,12 @@ void	ft_sort_3(t_list **list)
 
 void	ft_sort_500(t_list **list, t_list *stack_temp, int size)
 {
-	int			count;
 	int			chunk;
-	int			i;
 	t_list		*stack;
-	stk_size	stacksize;
 
 	stack = *list;
-	chunk = 1;
-	stacksize.b = 0;
-	stacksize.a = size;
-	i = (stacksize.a / 54);
-	while (i --)
-	{
-		count = stacksize.a;
-		while (count-- && stacksize.a > 3)
-		{
-			if (*(int *)stack ->content < chunk * 54)
-			{
-				ft_optimalpush(&stack_temp, list, *(int *)stack ->content, 'b');
-				if (stack_temp ->next)
-				{
-					if (*(int *)stack_temp ->content < ((2 * chunk - 1) * 27))
-						ft_rotate(&stack_temp, 'b');
-				}
-				stacksize.a--;
-				stacksize.b++;
-				stack = *list;
-			}
-			else
-				stack = stack ->next;
-		}
-		chunk++;
-	}
+	chunk = size / 54;
+	stack_temp = ft_chunk_500(list, stack_temp, chunk, 54);
 	while (*list)
 		ft_push(&stack_temp, list, 'b');
 	while (stack_temp)
@@ -101,16 +74,12 @@ void	ft_sort_500(t_list **list, t_list *stack_temp, int size)
 
 void	ft_sort_100(t_list **list, t_list *stack_temp, int size)
 {
-	// int			count;
 	int			chunk;
 	t_list		*stack;
-	int			i;
-	
+
 	stack = *list;
 	chunk = size / 24;
-	i = 1;
-	while (chunk--)
-		stack_temp = ft_chunk(list, stack_temp, size, 24 * i++);		
+	stack_temp = ft_chunk_100(list, stack_temp, chunk, 24);
 	while (*list)
 		ft_push(&stack_temp, list, 'b');
 	while (stack_temp)
@@ -131,7 +100,7 @@ int	ft_sort(t_list **list)
 		if (*(int *)ptr ->content > *(int *)ptr ->next->content)
 			ft_swap(list, 'a');
 	}
-	if (i == 3)
+	else if (i == 3)
 		ft_sort_3(list);
 	else if (i < 16)
 		ft_sort_5(list, stack_temp);

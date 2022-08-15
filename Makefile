@@ -6,11 +6,11 @@
 #    By: mkovoor <mkovoor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/27 12:09:04 by mkovoor           #+#    #+#              #
-#    Updated: 2022/08/10 09:41:12 by mkovoor          ###   ########.fr        #
+#    Updated: 2022/08/15 12:22:33 by mkovoor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pushswap
+NAME = push_swap
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -31,11 +31,11 @@ clean:
 	$(RM) $(OBJS)
 	$(MAKE) clean -C libft
 
-fclean:
+fclean:	clean
 	$(RM) $(NAME)
 	$(MAKE) fclean -C libft
 
 re:fclean all
 
-.PHONY: all pushswap clean fclean re
+.PHONY: all clean fclean re
 	
